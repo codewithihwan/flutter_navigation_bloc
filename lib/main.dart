@@ -29,10 +29,21 @@ class PageA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MyCubit, MyCubitState>(
+     final myCubit = BlocProvider.of<MyCubit>(context);
+    return BlocListener<MyCubit, int>(
       listener: (context, state) {
-        if (state is StateB) {
-          Navigator.of(context).pushNamed('/pageB');
+        if (state == 5) {
+          Navigator.of(context).push(
+              MaterialPageRoute<MyCubit>(
+                builder: (context) {
+                  return BlocProvider.value(
+                    value: myCubit,
+                    child: const PageB(),
+                  );
+                },
+              ),
+            );
+         // Navigator.of(context).pushNamed('/pageB');
         }
       },
       child: Scaffold(
@@ -40,11 +51,20 @@ class PageA extends StatelessWidget {
           title: const Text('Page A'),
         ),
         body: Center(
-          child: ElevatedButton(
-            child: const Text('Go to PageB'),
-            onPressed: () {
-              context.read<MyCubit>().changeState(StateB());
-            },
+          child: Column(
+            children: [
+              BlocBuilder<MyCubit, int>(
+                builder: (context, state) {
+                  return Text(state.toString());
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Go to PageB'),
+                onPressed: () {
+                  context.read<MyCubit>().increment();
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -62,11 +82,20 @@ class PageB extends StatelessWidget {
         title: const Text('Page B'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Pop'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        child: Column(
+          children: [
+            BlocBuilder<MyCubit, int>(
+              builder: (context, state) {
+                return Text(state.toString());
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Pop'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         ),
       ),
     );

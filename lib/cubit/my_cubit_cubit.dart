@@ -1,12 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
-part 'my_cubit_state.dart';
 
-class MyCubit extends Cubit<MyCubitState> {
-  MyCubit() : super(StateA());
+class MyCubit extends Cubit<int> {
+  MyCubit() : super(0);
 
-  void changeState(MyCubitState state) {
-   emit(state);
-  }
+  void increment() => emit(state + 1);
+  void decrement() => emit(state - 1);
 }
